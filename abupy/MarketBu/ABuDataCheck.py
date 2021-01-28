@@ -27,19 +27,19 @@ show_msg_toast_func = partial(show_msg, u'提示', log=True)
 
 def browser_down_csv_zip(open_browser=False):
     """浏览器打开教程使用的csv数据百度云地址"""
-    try:
-        if open_browser:
-            import webbrowser
-            webbrowser.open('https://pan.baidu.com/s/1geNZgqf', new=0, autoraise=True)
-            show_msg_toast_func(u'提取密码: gvtr')
-    except:
-        pass
-    finally:
-        logging.info(u'建议直接从百度云下载教程中使用的csv格式美股，A股，港股，币类，期货6年日k数据: ')
-        logging.info(u'下载地址: https://pan.baidu.com/s/1geNZgqf')
-        logging.info(u'提取密码: gvtr')
-        logging.info(u'下载完成后解压zip得到\'csv\'文件夹到\'{}\'目录下'.format(ABuEnv.g_project_data_dir))
-
+    #try:
+    #    if open_browser:
+    #        import webbrowser
+    #        webbrowser.open('https://pan.baidu.com/s/1geNZgqf', new=0, autoraise=True)
+    #        show_msg_toast_func(u'提取密码: gvtr')
+    #except:
+    #    pass
+    #finally:
+    #    logging.info(u'建议直接从百度云下载教程中使用的csv格式美股，A股，港股，币类，期货6年日k数据: ')
+    #    logging.info(u'下载地址: https://pan.baidu.com/s/1geNZgqf')
+    #    logging.info(u'提取密码: gvtr')
+    #    logging.info(u'下载完成后解压zip得到\'csv\'文件夹到\'{}\'目录下'.format(ABuEnv.g_project_data_dir))
+    logging.info(u'not implement for 台股回测 raw data download')
 
 # noinspection PyProtectedMember
 def check_symbol_data_mode(choice_symbols):
@@ -56,16 +56,19 @@ def check_symbol_data_mode(choice_symbols):
             browser_down_csv_zip()
             return False
 
+    #is_stock_market = \
+    #    ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_FUTURES_CN or \
+    #    ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_US or \
+    #    ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_HK
+
     is_stock_market = \
-        ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_FUTURES_CN or \
-        ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_US or \
-        ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_HK
+        ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_TW
 
     if is_stock_market and not ABuEnv._g_enable_example_env_ipython and choice_symbols is None:
         # 非沙盒模式下要做全股票市场全市场回测
         if ABuEnv.g_data_fetch_mode != EMarketDataFetchMode.E_DATA_FETCH_FORCE_LOCAL:
             logging.info(
-                u'未选择任何回测目标且在非沙盒数据模式下，判定为进行全市场回测'
+                u'未选择任何回测目标且在非沙盒数据模式下，判定为进行全市场/台股回测'
                 u'为了提高运行效率，请将联网模式修改为\'本地数据模式\'，如需要进行数据更新，'
                 u'请先使用\'数据下载界面操作\'进行数据更新！')
             browser_down_csv_zip()

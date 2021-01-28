@@ -88,9 +88,11 @@ def load_all_kline(want_df=True, market=None, all_market=False):
             if market is None:
                 market = ABuEnv.g_market_target
 
-            k_market_map = {EMarketTargetType.E_MARKET_TARGET_US: [EMarketTargetType.E_MARKET_TARGET_US.value],
-                            EMarketTargetType.E_MARKET_TARGET_HK: [EMarketTargetType.E_MARKET_TARGET_HK.value],
-                            EMarketTargetType.E_MARKET_TARGET_CN: [EMarketSubType.SZ.value, EMarketSubType.SH.value]}
+            #k_market_map = {EMarketTargetType.E_MARKET_TARGET_US: [EMarketTargetType.E_MARKET_TARGET_US.value],
+            #                EMarketTargetType.E_MARKET_TARGET_HK: [EMarketTargetType.E_MARKET_TARGET_HK.value],
+            #                EMarketTargetType.E_MARKET_TARGET_CN: [EMarketSubType.SZ.value, EMarketSubType.SH.value]}
+
+            k_market_map = {EMarketTargetType.E_MARKET_TARGET_TW: [EMarketTargetType.E_MARKET_TARGET_TW.value]}
 
             # 对应市场的head
             market_head_list = k_market_map[market]

@@ -22,7 +22,7 @@ from ..CoreBu.ABuFixes import KFold, six
 from ..UtilBu.ABuLazyUtil import LazyFunc
 from ..MarketBu.ABuSymbol import Symbol, code_to_symbol
 from ..MarketBu.ABuSymbolFutures import AbuFuturesCn, AbuFuturesGB
-from ..MarketBu.ABuSymbolStock import AbuSymbolCN, AbuSymbolUS, AbuSymbolHK
+from ..MarketBu.ABuSymbolStock import AbuSymbolTW
 
 __author__ = '阿布'
 __weixin__ = 'abu_quant'
@@ -37,10 +37,7 @@ K_MARKET_TEST_FN_BASE = os.path.join(ABuEnv.g_project_cache_dir, 'market_test_sy
 K_MARKET_TRAIN_FN_BASE = os.path.join(ABuEnv.g_project_cache_dir, 'market_train_symbols')
 
 # TODO 从沙盒数据库里读取，否则之后有变动还需要跟着改
-K_SAND_BOX_US = ['usTSLA', 'usNOAH', 'usSFUN', 'usBIDU', 'usAAPL', 'usGOOG', 'usWUBA', 'usVIPS']
-K_SAND_BOX_CN = ['sz002230', 'sz300104', 'sz300059', 'sh601766', 'sh600085', 'sh600036',
-                 'sh600809', 'sz000002', 'sz002594', 'sz002739']
-K_SAND_BOX_HK = ['hk03333', 'hk00700', 'hk02333', 'hk01359', 'hk00656', 'hk03888', 'hk02318']
+K_SAND_BOX_TW = ['2330', '2412', '3008']
 
 
 # noinspection PyUnresolvedReferences
@@ -137,7 +134,7 @@ def choice_symbols_with_replace(count, market_symbols=None, market=None):
     return np.random.choice(market_symbols, count, replace=True)
 
 
-def _all_us_symbol(index=False):
+def _all_tw_symbol(index=False):
     """
     通过AbuSymbolUS().all_symbol获取美股全市场股票代码
     :param index: 是否包含指数
@@ -146,56 +143,16 @@ def _all_us_symbol(index=False):
 
     # noinspection PyProtectedMember
     if ABuEnv._g_enable_example_env_ipython:
-        return K_SAND_BOX_US
-    return AbuSymbolUS().all_symbol(index=index)
+        return K_SAND_BOX_TW
+    return AbuSymbolTW().all_symbol(index=index)
 
 
-def _all_cn_symbol(index=False):
-    """
-    通过AbuSymbolCN().all_symbol获取A股全市场股票代码
-    :param index: 是否包含指数
-    :return:
-    """
-    # noinspection PyProtectedMember
-    if ABuEnv._g_enable_example_env_ipython:
-        return K_SAND_BOX_CN
-    return AbuSymbolCN().all_symbol(index=index)
-
-
-def _all_hk_symbol(index=False):
-    """
-    通过AbuSymbolHK().all_symbol获取A股全市场股票代码
-    :param index: 是否包含指数
-    :return:
-    """
-    # noinspection PyProtectedMember
-    if ABuEnv._g_enable_example_env_ipython:
-        return K_SAND_BOX_HK
-    return AbuSymbolHK().all_symbol(index=index)
-
-
-def _all_futures_cn():
+def _all_futures_tw():
     """
     AbuFuturesCn().symbol获取国内期货symbol代码，注意这里只取连续合约代码
     :return:
     """
-    return AbuFuturesCn().symbol
-
-
-def _all_futures_gb():
-    """
-    AbuFuturesGB().symbol获取国际期货symbol代码，LME，CBOT，COMEX
-    :return:
-    """
-    return AbuFuturesGB().symbol
-
-
-def _all_tc_symbol():
-    """
-    获取币类symbol，注意这里只取比特币与莱特币，可自行扩展其它币种
-    :return:
-    """
-    return ['btc', 'ltc']
+    return None
 
 
 def all_symbol(market=None, ss=False, index=False, value=True):
@@ -211,18 +168,8 @@ def all_symbol(market=None, ss=False, index=False, value=True):
         # None则服从ABuEnv.g_market_target市场设置
         market = ABuEnv.g_market_target
 
-    if market == EMarketTargetType.E_MARKET_TARGET_US:
-        symbols = _all_us_symbol(index)
-    elif market == EMarketTargetType.E_MARKET_TARGET_CN:
-        symbols = _all_cn_symbol(index)
-    elif market == EMarketTargetType.E_MARKET_TARGET_HK:
-        symbols = _all_hk_symbol(index)
-    elif market == EMarketTargetType.E_MARKET_TARGET_FUTURES_CN:
-        symbols = _all_futures_cn()
-    elif market == EMarketTargetType.E_MARKET_TARGET_FUTURES_GLOBAL:
-        symbols = _all_futures_gb()
-    elif market == EMarketTargetType.E_MARKET_TARGET_TC:
-        symbols = _all_tc_symbol()
+    if market == EMarketTargetType.E_MARKET_TARGET_TW:
+        symbols = _all_tw_symbol(index)
     else:
         raise TypeError('JUST SUPPORT EMarketTargetType!')
 
@@ -381,9 +328,7 @@ def is_in_sand_box(symbol):
     if cs.is_futures() or cs.is_tc():
         # 沙盒数据支持完整期货和电子货币市场
         return True
-    if symbol in K_SAND_BOX_CN \
-            or symbol in K_SAND_BOX_US \
-            or symbol in K_SAND_BOX_HK:
+    if symbol in K_SAND_BOX_TW:
         # A股，美股，港股沙盒数据需要在沙盒数据序列中
         return True
     return False
@@ -391,9 +336,8 @@ def is_in_sand_box(symbol):
 
 """＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊Deprecated 旧数据格式文件＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊"""
 _rom_dir = ABuEnv.g_project_rom_data_dir
-_stock_code_cn = os.path.join(_rom_dir, 'stock_code_cn.txt')
-_stock_code_us = os.path.join(_rom_dir, 'stock_code_us.txt')
-_stock_code_hk = os.path.join(_rom_dir, 'stock_code_hk.txt')
+_stock_code_tw = os.path.join(_rom_dir, 'stock_code_tw.txt')
+
 
 
 @AbuDeprecated()
@@ -404,42 +348,18 @@ def _parse_code(line, index):
     market = _slice[0]
     is_index = _slice[1] == 4
     code = _slice[2]
-    if market == 'us':
-        m_type = AbuSymbolUS().query_symbol_sub_market(code)
-    else:
-        m_type = EMarketSubType(market)
+
+    m_type = EMarketSubType(market)
     if m_type is not None and not (not index and is_index):
         return Symbol(ABuEnv.g_market_target, m_type, code)
 
 
 @AbuDeprecated('only read old symbol, miss update!!!')
-def _all_us_symbol_deprecated(index=False):
+def _all_tw_symbol_deprecated(index=False):
     """
     获取美股全市场股票代码
     :param index: 是否包含指数
     :return:
     """
-    with open(_stock_code_us, 'rb') as us_f:
+    with open(_stock_code_tw, 'rb') as us_f:
         return list(filter(lambda x: x is not None, [_parse_code(line, index) for line in us_f.readlines()]))
-
-
-@AbuDeprecated('only read old symbol, miss update!!!')
-def _all_cn_symbol_deprecated(index=False):
-    """
-    获取A股全市场股票代码
-    :param index: 是否包含指数
-    :return:
-    """
-    with open(_stock_code_cn, 'rb') as cn_f:
-        return list(filter(lambda x: x is not None, [_parse_code(line, index) for line in cn_f.readlines()]))
-
-
-@AbuDeprecated('only read old symbol, miss update!!!')
-def _all_hk_symbol_deprecated(index=False):
-    """
-    获取港股全市场股票代码
-    :param index: 是否包含指数
-    :return:
-    """
-    with open(_stock_code_hk, 'rb') as hk_f:
-        return list(filter(lambda x: x is not None, [_parse_code(line, index) for line in hk_f.readlines()]))

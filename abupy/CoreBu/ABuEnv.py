@@ -215,6 +215,10 @@ class EMarketSourceType(Enum):
     E_MARKET_SOURCE_nt = 2
     """新浪 美股"""
     E_MARKET_SOURCE_sn_us = 3
+    """ sinopac 台股 """
+    E_MARKET_SOURCE_sinopac_tw = 4
+    """ finmind 台股 """
+    E_MARKET_SOURCE_finmind_tw = 5
 
     """新浪 国内期货"""
     E_MARKET_SOURCE_sn_futures = 100
@@ -226,7 +230,8 @@ class EMarketSourceType(Enum):
 
 
 """默认设置数据源使用E_MARKET_SOURCE_bd"""
-g_market_source = EMarketSourceType.E_MARKET_SOURCE_bd
+#g_market_source = EMarketSourceType.E_MARKET_SOURCE_sn_us
+g_market_source = EMarketSourceType.E_MARKET_SOURCE_finmind_tw
 
 """自定义的私有数据源类，默认None"""
 g_private_data_source = None
@@ -245,6 +250,8 @@ class EMarketTargetType(Enum):
     E_MARKET_TARGET_CN = 'hs'
     """港股市场"""
     E_MARKET_TARGET_HK = 'hk'
+    """台股市场"""
+    E_MARKET_TARGET_TW = 'tw'
 
     """国内期货市场"""
     E_MARKET_TARGET_FUTURES_CN = 'futures_cn'
@@ -275,6 +282,11 @@ class EMarketSubType(Enum):
     """未上市"""
     US_PREIPO = 'PREIPO'
 
+    """ 台股上市 """
+    TW_TWSE = 'TWSE'
+    """ 台股上櫃 """
+    TW_OTC = 'TWOTC'
+
     """港股hk"""
     HK = 'hk'
 
@@ -301,8 +313,9 @@ class EMarketSubType(Enum):
     COIN = 'COIN'
 
 
-"""切换目标操作市场，美股，A股，港股，期货，比特币等，默认美股市场"""
-g_market_target = EMarketTargetType.E_MARKET_TARGET_US
+"""切换目标操作市场，美股，A股，港股，期货，比特币等，默认台股市场"""
+#g_market_target = EMarketTargetType.E_MARKET_TARGET_US
+g_market_target = EMarketTargetType.E_MARKET_TARGET_TW
 
 """市场中1年交易日，默认250日"""
 g_market_trade_year = 250
@@ -312,6 +325,33 @@ if g_market_target == EMarketTargetType.E_MARKET_TARGET_US:
 if g_market_target == EMarketTargetType.E_MARKET_TARGET_TC:
     # 默认设置币类每天都可以交易
     g_market_trade_year = 365
+if g_market_target == EMarketTargetType.E_MARKET_TARGET_TW:
+    # 默认设置币类每天都可以交易
+    g_market_trade_year = 365
+
+
+class ESINOPACGateWay(Enum):
+    """sinopac gateway """
+
+    """身分證"""
+    E_SINOPAC_USERID = os.environ.get('E_SINOPAC_USERID')
+    """ PASSWORD """
+    E_SINOPAC_PASSWORD = os.environ.get('E_SINOPAC_PASSWORD')
+    """ 憑證路徑 """
+    E_SINOPAC_ACTIVE_CA = os.environ.get('E_SINOPAC_ACTIVE_CA')
+    """ GateWay Connect or not """
+    E_SINOPAC_CONNECT = 0 
+
+
+class EFINMINDGateWay(Enum):
+    """sinopac gateway """
+
+    """username"""
+    E_FINMIND_USERID = os.environ.get('E_FINMIND_USERID')
+    """ PASSWORD """
+    E_FINMIND_PASSWORD = os.environ.get('E_FINMIND_PASSWORD')
+    """ GateWay Connect or not """
+    E_FINMIND_CONNECT = 0 
 
 
 # TODO EMarketDataSplitMode移动到市场请求相关对应的模块中

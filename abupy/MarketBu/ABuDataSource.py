@@ -12,7 +12,7 @@ import logging
 import numpy as np
 
 from ..MarketBu.ABuDataBase import BaseMarket
-from ..MarketBu.ABuDataFeed import BDApi, TXApi, NTApi, HBApi, SNUSApi, SNFuturesApi, SNFuturesGBApi
+from ..MarketBu.ABuDataFeed import FINMINDApi
 from .ABuSymbol import Symbol
 from .ABuSymbol import code_to_symbol
 from ..CoreBu import ABuEnv
@@ -31,13 +31,7 @@ except ImportError:
 
 
 """内置数据源source_dict"""
-source_dict = {EMarketSourceType.E_MARKET_SOURCE_bd.value: BDApi,
-               EMarketSourceType.E_MARKET_SOURCE_tx.value: TXApi,
-               EMarketSourceType.E_MARKET_SOURCE_nt.value: NTApi,
-               EMarketSourceType.E_MARKET_SOURCE_sn_us.value: SNUSApi,
-               EMarketSourceType.E_MARKET_SOURCE_sn_futures.value: SNFuturesApi,
-               EMarketSourceType.E_MARKET_SOURCE_sn_futures_gb.value: SNFuturesGBApi,
-               EMarketSourceType.E_MARKET_SOURCE_hb_tc.value: HBApi}
+source_dict = {EMarketSourceType.E_MARKET_SOURCE_finmind_tw.value: FINMINDApi}
 
 
 def _calc_start_end_date(df, force_local, n_folds, start, end):
@@ -123,7 +117,7 @@ def kline_pd(symbol, data_mode, n_folds=2, start=None, end=None, save=True):
             # 如果是str对象，通过code_to_symbol转化为Symbol对象
             temp_symbol = code_to_symbol(symbol)
         else:
-            raise TypeError('symbol must like as "usTSLA" or "TSLA" or Symbol(MType.US, "TSLA")')
+            raise TypeError('symbol must like as "2330" or "2412')
         if ABuEnv.g_private_data_source is None:
             # 如果没有设置私有数据源，使用env中设置的内置示例测试源
             source = source_dict[ABuEnv.g_market_source.value]
