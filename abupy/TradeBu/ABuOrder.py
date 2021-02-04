@@ -98,41 +98,12 @@ class AbuOrder(object):
             if np.isnan(bc):
                 return
 
-            if market != EMarketTargetType.E_MARKET_TARGET_TC:
-                # 除了比特币市场外，都向下取整数到最小交易单位个数
-                buy_cnt = int(math.floor(bc))
-            else:
-                # 币类市场可以买非整数个, 保留三位小数
-                buy_cnt = round(bc, 3)
+            # 币类市场可以买非整数个, 保留三位小数
+            buy_cnt = round(bc, 3)
 
-            if market == EMarketTargetType.E_MARKET_TARGET_US:
-                # 美股1
-                min_cnt = 1
-            elif market == EMarketTargetType.E_MARKET_TARGET_TC:
-                # 国内一般只支持到0.01个
-                min_cnt = 0.01
-            elif market == EMarketTargetType.E_MARKET_TARGET_CN:
-                # A股最小100一手
-                min_cnt = 100
-                # 向最小的手量看齐
-                buy_cnt -= buy_cnt % min_cnt
-            elif market == EMarketTargetType.E_MARKET_TARGET_HK:
-                # 港股从AbuHkUnit读取数据，查询对应symbol每一手的交易数量
-                min_cnt = AbuHkUnit().query_unit(factor_object.kl_pd.name)
-                # 向最小的手量看齐
-                buy_cnt -= buy_cnt % min_cnt
-            elif market == EMarketTargetType.E_MARKET_TARGET_FUTURES_CN:
-                # 国内期货，查询最少一手单位
-                min_cnt = AbuFuturesCn().query_min_unit(factor_object.kl_pd.name)
-                # 向最小的手量看齐
-                buy_cnt -= buy_cnt % min_cnt
-            elif market == EMarketTargetType.E_MARKET_TARGET_OPTIONS_US:
-                # 美股期权最小合约单位1contract，代表100股股票权利
-                min_cnt = 100
-                buy_cnt -= buy_cnt % min_cnt
-            elif market == EMarketTargetType.E_MARKET_TARGET_FUTURES_GLOBAL:
-                # 国际期货, 查询最少一手单位
-                min_cnt = AbuFuturesGB().query_min_unit(factor_object.kl_pd.name)
+            if market == EMarketTargetType.E_MARKET_TARGET_TW:
+                # 台股1000
+                min_cnt = 1000
                 buy_cnt -= buy_cnt % min_cnt
             else:
                 raise TypeError('ABuEnv.g_market_target ERROR, market={}, g_market_target={}'.format(

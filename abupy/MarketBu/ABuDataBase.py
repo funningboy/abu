@@ -20,9 +20,8 @@ class SupportMixin(object):
     """混入类，声明数据源支持的市场，以及检测是否支持市场"""
 
     def _support_market(self):
-        """声明数据源支持的市场，默认声明支持美股，港股，a股"""
-        return [EMarketTargetType.E_MARKET_TARGET_US, EMarketTargetType.E_MARKET_TARGET_HK,
-                EMarketTargetType.E_MARKET_TARGET_CN]
+        """声明数据源支持的市场，默认声明支持台股"""
+        return [EMarketTargetType.E_MARKET_TARGET_TW]
 
     def check_support(self, symbol=None, rs=True):
         """

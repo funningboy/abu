@@ -224,7 +224,8 @@ class FINMINDParser(object):
 
     # noinspection PyUnusedLocal
     def __init__(self, symbol, json_dict):
-       # 为AbuDataParseWrap准备类必须的属性序列
+        data = json_dict['data']
+        # 为AbuDataParseWrap准备类必须的属性序列
         if len(data) > 0:
             # 时间日期序列
             self.date = [item['date'] for item in data]

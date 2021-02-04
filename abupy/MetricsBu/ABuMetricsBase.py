@@ -312,14 +312,14 @@ class AbuMetricsBase(object):
     def plot_order_returns_cmp(self, only_info=True):
         """非真实成交的度量，认为资金无限，无资金管理的情况下总体情况"""
 
-        self.log_func('买入后卖出的交易数量:{}'.format(self.order_has_ret.shape[0]))
-        self.log_func('买入后尚未卖出的交易数量:{}'.format(self.order_keep.shape[0]))
-        self.log_func('胜率:{:.4f}%'.format(self.win_rate * 100))
-        self.log_func('平均获利期望:{:.4f}%'.format(self.gains_mean * 100))
-        self.log_func('平均亏损期望:{:.4f}%'.format(self.losses_mean * 100))
-        self.log_func('盈亏比:{:.4f}'.format(self.win_loss_profit_rate))
-        self.log_func('所有交易收益比例和:{:.4f} '.format(self.order_has_ret.profit_cg.sum()))
-        self.log_func('所有交易总盈亏和:{:.4f} '.format(self.all_profit))
+        self.log_func(u'买入后卖出的交易数量:{}'.format(self.order_has_ret.shape[0]))
+        self.log_func(u'买入后尚未卖出的交易数量:{}'.format(self.order_keep.shape[0]))
+        self.log_func(u'胜率:{:.4f}%'.format(self.win_rate * 100))
+        self.log_func(u'平均获利期望:{:.4f}%'.format(self.gains_mean * 100))
+        self.log_func(u'平均亏损期望:{:.4f}%'.format(self.losses_mean * 100))
+        self.log_func(u'盈亏比:{:.4f}'.format(self.win_loss_profit_rate))
+        self.log_func(u'所有交易收益比例和:{:.4f} '.format(self.order_has_ret.profit_cg.sum()))
+        self.log_func(u'所有交易总盈亏和:{:.4f} '.format(self.all_profit))
 
         if only_info:
             return
@@ -331,24 +331,24 @@ class AbuMetricsBase(object):
     def plot_returns_cmp(self, only_show_returns=False, only_info=False):
         """考虑资金情况下的度量，进行与benchmark的收益度量对比，收益趋势，资金变动可视化，以及其它度量信息"""
 
-        self.log_func('买入后卖出的交易数量:{}'.format(self.order_has_ret.shape[0]))
-        self.log_func('买入后尚未卖出的交易数量:{}'.format(self.order_keep.shape[0]))
+        self.log_func(u'买入后卖出的交易数量:{}'.format(self.order_has_ret.shape[0]))
+        self.log_func(u'买入后尚未卖出的交易数量:{}'.format(self.order_keep.shape[0]))
 
-        self.log_func('胜率:{:.4f}%'.format(self.win_rate * 100))
+        self.log_func(u'胜率:{:.4f}%'.format(self.win_rate * 100))
 
-        self.log_func('平均获利期望:{:.4f}%'.format(self.gains_mean * 100))
-        self.log_func('平均亏损期望:{:.4f}%'.format(self.losses_mean * 100))
+        self.log_func(u'平均获利期望:{:.4f}%'.format(self.gains_mean * 100))
+        self.log_func(u'平均亏损期望:{:.4f}%'.format(self.losses_mean * 100))
 
-        self.log_func('盈亏比:{:.4f}'.format(self.win_loss_profit_rate))
+        self.log_func(u'盈亏比:{:.4f}'.format(self.win_loss_profit_rate))
 
-        self.log_func('策略收益: {:.4f}%'.format(self.algorithm_period_returns * 100))
-        self.log_func('基准收益: {:.4f}%'.format(self.benchmark_period_returns * 100))
-        self.log_func('策略年化收益: {:.4f}%'.format(self.algorithm_annualized_returns * 100))
-        self.log_func('基准年化收益: {:.4f}%'.format(self.benchmark_annualized_returns * 100))
+        self.log_func(u'策略收益: {:.4f}%'.format(self.algorithm_period_returns * 100))
+        self.log_func(u'基准收益: {:.4f}%'.format(self.benchmark_period_returns * 100))
+        self.log_func(u'策略年化收益: {:.4f}%'.format(self.algorithm_annualized_returns * 100))
+        self.log_func(u'基准年化收益: {:.4f}%'.format(self.benchmark_annualized_returns * 100))
 
-        self.log_func('策略买入成交比例:{:.4f}%'.format(self.buy_deal_rate * 100))
-        self.log_func('策略资金利用率比例:{:.4f}%'.format(self.cash_utilization * 100))
-        self.log_func('策略共执行{}个交易日'.format(self.num_trading_days))
+        self.log_func(u'策略买入成交比例:{:.4f}%'.format(self.buy_deal_rate * 100))
+        self.log_func(u'策略资金利用率比例:{:.4f}%'.format(self.cash_utilization * 100))
+        self.log_func(u'策略共执行{}个交易日'.format(self.num_trading_days))
 
         if only_info:
             return
@@ -369,15 +369,15 @@ class AbuMetricsBase(object):
     def plot_sharp_volatility_cmp(self, only_info=False):
         """sharp，volatility的策略与基准对比可视化，以及alpha阿尔法，beta贝塔，Information信息比率等信息输出"""
 
-        self.log_func('alpha阿尔法:{:.4f}'.format(self.alpha))
-        self.log_func('beta贝塔:{:.4f}'.format(self.beta))
-        self.log_func('Information信息比率:{:.4f}'.format(self.information))
+        self.log_func(u'alpha阿尔法:{:.4f}'.format(self.alpha))
+        self.log_func(u'beta贝塔:{:.4f}'.format(self.beta))
+        self.log_func(u'Information信息比率:{:.4f}'.format(self.information))
 
-        self.log_func('策略Sharpe夏普比率: {:.4f}'.format(self.algorithm_sharpe))
-        self.log_func('基准Sharpe夏普比率: {:.4f}'.format(self.benchmark_sharpe))
+        self.log_func(u'策略Sharpe夏普比率: {:.4f}'.format(self.algorithm_sharpe))
+        self.log_func(u'基准Sharpe夏普比率: {:.4f}'.format(self.benchmark_sharpe))
 
-        self.log_func('策略波动率Volatility: {:.4f}'.format(self.algorithm_volatility))
-        self.log_func('基准波动率Volatility: {:.4f}'.format(self.benchmark_volatility))
+        self.log_func(u'策略波动率Volatility: {:.4f}'.format(self.algorithm_volatility))
+        self.log_func(u'基准波动率Volatility: {:.4f}'.format(self.benchmark_volatility))
 
         if only_info:
             return
@@ -393,7 +393,7 @@ class AbuMetricsBase(object):
     def plot_effect_mean_day(self):
         """可视化因子平均生效间隔时间"""
 
-        self.log_func('因子平均生效间隔:{}'.format(self.effect_mean_day))
+        self.log_func(u'因子平均生效间隔:{}'.format(self.effect_mean_day))
 
         ddvc = self.diff_dt.value_counts()
         ddvc_rt = ddvc / ddvc.sum()
@@ -409,7 +409,7 @@ class AbuMetricsBase(object):
     def plot_action_buy_cost(self):
         """可视化开仓花费情况"""
 
-        self.log_func('开仓花费情况: ')
+        self.log_func(u'开仓花费情况: ')
         self.log_func(self.cost_stats)
 
         plt.title('action buy cost')
@@ -421,7 +421,7 @@ class AbuMetricsBase(object):
     @valid_check
     def plot_sell_factors(self):
         """可视化卖出生效因子分布"""
-        self.log_func('卖出择时生效因子分布：')
+        self.log_func(u'卖出择时生效因子分布：')
         self.log_func(self.dumm_sell_t_sum)
         if self.dumm_sell_t_sum.shape[0] > 1:
             self.dumm_sell_t_sum.plot(kind='barh')
@@ -431,7 +431,7 @@ class AbuMetricsBase(object):
     @valid_check
     def plot_buy_factors(self):
         """可视化买入生效因子分布"""
-        self.log_func('买入择时生效因子分布：')
+        self.log_func(u'买入择时生效因子分布：')
         self.log_func(self.dumm_buy_t_sum)
 
         if self.dumm_buy_t_sum.shape[0] > 1:
@@ -443,8 +443,8 @@ class AbuMetricsBase(object):
     def plot_keep_days(self):
         """可视化策略持股天数"""
 
-        self.log_func('策略持股天数平均数: {:.3f}'.format(self.keep_days_mean))
-        self.log_func('策略持股天数中位数: {:.3f}'.format(self.keep_days_median))
+        self.log_func(u'策略持股天数平均数: {:.3f}'.format(self.keep_days_mean))
+        self.log_func(u'策略持股天数中位数: {:.3f}'.format(self.keep_days_median))
         bins = int(self.orders_pd['keep_days'].shape[0] / 5)
         bins = bins if bins > 0 else 5
         self.orders_pd['keep_days'].plot(kind='hist', bins=bins)
@@ -495,8 +495,8 @@ class AbuMetricsBase(object):
         plt.grid(True)
         plt.show()
 
-        self.log_func('最大回撤: {:5f}'.format(down_rate))
-        self.log_func('最大回测启始时间:{}, 结束时间{}, 共回测{:3f}'.format(
+        self.log_func(u'最大回撤: {:5f}'.format(down_rate))
+        self.log_func(u'最大回测启始时间:{}, 结束时间{}, 共回测{:3f}'.format(
             ABuDateUtil.timestamp_to_str(list(six.iterkeys(max_draw_down))[0][0]),
             ABuDateUtil.timestamp_to_str(list(six.iterkeys(max_draw_down))[0][1]),
             list(six.itervalues(max_draw_down))[0]))
@@ -588,7 +588,7 @@ class MetricsDemo(AbuMetricsBase):
             使用计算好的首先费cumsum序列和策略收益cumsum序列进行可视化对比
             可视化收益曲线和手续费曲线之前的关系
         """
-        print('回测周期内手续费共: {:.2f}'.format(self.commission_sum))
+        print(u'回测周期内手续费共: {:.2f}'.format(self.commission_sum))
         # 使用缩放scaler_xy将两条曲线缩放到同一个级别
         x, y = ABuScalerUtil.scaler_xy(self.commission_cum, self.algorithm_cum_returns, type_look='look_max',
                                        mean_how=True)

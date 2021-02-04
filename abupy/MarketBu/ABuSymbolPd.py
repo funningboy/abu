@@ -67,9 +67,9 @@ def _benchmark(df, benchmark, symbol):
         # 如果两个序列同时有相同的开始和结束改为1，也就是如果数据头尾日起的标尺都对的上的话，na数量忽略不计
         base_keep_div = 1
 
-    if symbol.is_a_stock():
-        # 如果是A股市场的目标，由于停盘频率和周期都会长与其它市场所以再放宽一些
-        base_keep_div *= 0.7
+    #if symbol.is_tw_stock():
+    #    # 如果是A股市场的目标，由于停盘频率和周期都会长与其它市场所以再放宽一些
+    #    base_keep_div *= 0.7
 
     if nan_cnt.index.shape[0] > 0 and nan_cnt.index.tolist().count(True) > 0 \
             and nan_cnt.loc[True] > benchmark.kl_pd.shape[0] / base_keep_div:

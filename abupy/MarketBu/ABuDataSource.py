@@ -116,6 +116,7 @@ def kline_pd(symbol, data_mode, n_folds=2, start=None, end=None, save=True):
         elif isinstance(symbol, six.string_types):
             # 如果是str对象，通过code_to_symbol转化为Symbol对象
             temp_symbol = code_to_symbol(symbol)
+            print(temp_symbol)
         else:
             raise TypeError('symbol must like as "2330" or "2412')
         if ABuEnv.g_private_data_source is None:

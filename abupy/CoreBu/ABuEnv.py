@@ -285,7 +285,7 @@ class EMarketSubType(Enum):
     """ 台股上市 """
     TW_TWSE = 'TWSE'
     """ 台股上櫃 """
-    TW_OTC = 'TWOTC'
+    TW_TPEX = 'TPEX'
 
     """港股hk"""
     HK = 'hk'
@@ -319,12 +319,6 @@ g_market_target = EMarketTargetType.E_MARKET_TARGET_TW
 
 """市场中1年交易日，默认250日"""
 g_market_trade_year = 250
-if g_market_target == EMarketTargetType.E_MARKET_TARGET_US:
-    # 美股252天
-    g_market_trade_year = 252
-if g_market_target == EMarketTargetType.E_MARKET_TARGET_TC:
-    # 默认设置币类每天都可以交易
-    g_market_trade_year = 365
 if g_market_target == EMarketTargetType.E_MARKET_TARGET_TW:
     # 默认设置币类每天都可以交易
     g_market_trade_year = 365

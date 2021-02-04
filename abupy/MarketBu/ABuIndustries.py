@@ -18,7 +18,7 @@ import pandas as pd
 from ..MarketBu import ABuSymbolPd
 from ..UtilBu.ABuStrUtil import to_unicode
 from ..UtilBu import ABuScalerUtil
-from ..MarketBu.ABuSymbolStock import AbuSymbolUS, AbuSymbolCN, AbuSymbolHK
+from ..MarketBu.ABuSymbolStock import AbuSymbolTW
 from ..CoreBu.ABuEnv import EMarketDataSplitMode, EMarketTargetType
 from ..CoreBu import ABuEnv
 
@@ -31,20 +31,10 @@ def industries_df(target_symbol):
     :param target_symbol: symbol str对象
     :return: （返回查询的结果industries: pd.DataFrame对象, 所属symbol市场类: AbuSymbolStockBase子类）
     """
-    industries = AbuSymbolUS().query_industry_symbols(target_symbol)
+    industries = AbuSymbolTW().query_industry_symbols(target_symbol)
     if industries is not None:
-        # 美股查到了有行业分类结果
-        return industries, AbuSymbolUS()
-
-    industries = AbuSymbolCN().query_industry_symbols(target_symbol)
-    if industries is not None:
-        # a股查到了有行业分类结果
-        return industries, AbuSymbolCN()
-
-    industries = AbuSymbolHK().query_industry_symbols(target_symbol)
-    if industries is not None:
-        # 港股查到了有行业分类结果
-        return industries, AbuSymbolHK()
+        # 台股查到了有行业分类结果
+        return industries, AbuSymbolTW()
     # 都没查到，返回None, None
     return None, None
 
@@ -104,14 +94,10 @@ def industries_factorize(market=None):
         # None则服从ABuEnv.g_market_target市场设置
         market = ABuEnv.g_market_target
 
-    if market == EMarketTargetType.E_MARKET_TARGET_US:
-        return AbuSymbolUS().industry_factorize_name_series
-    elif market == EMarketTargetType.E_MARKET_TARGET_CN:
-        return AbuSymbolCN().industry_factorize_name_series
-    elif market == EMarketTargetType.E_MARKET_TARGET_HK:
-        return AbuSymbolHK().industry_factorize_name_series
-    # 仅支持美股，a股，港股
-    raise TypeError('JUST SUPPORT US, CN, HK!')
+    if market == EMarketTargetType.E_MARKET_TARGET_TW:
+        return AbuSymbolTW().industry_factorize_name_series
+    # 仅支持台股
+    raise TypeError('JUST SUPPORT TW!')
 
 
 def industries_market(market=None):
@@ -127,14 +113,10 @@ def industries_market(market=None):
         # None则服从ABuEnv.g_market_target市场设置
         market = ABuEnv.g_market_target
 
-    if market == EMarketTargetType.E_MARKET_TARGET_US:
-        industries_market_op = AbuSymbolUS()
-    elif market == EMarketTargetType.E_MARKET_TARGET_CN:
-        industries_market_op = AbuSymbolCN()
-    elif market == EMarketTargetType.E_MARKET_TARGET_HK:
-        industries_market_op = AbuSymbolHK()
+    if market == EMarketTargetType.E_MARKET_TARGET_TW:
+        industries_market_op = AbuSymbolTW()
     else:
-        raise TypeError('JUST SUPPORT US, CN, HK!')
+        raise TypeError('JUST SUPPORT TW')
     # 返回市场的句柄操作对象
     return industries_market_op
 

@@ -40,6 +40,20 @@ def calc_commission_us(trade_cnt, price):
     return commission
 
 
+def calc_commission_tw(trade_cnt, price):
+    """
+    美股计算交易费用：每股0.01，最低消费2.99
+    :param trade_cnt: 交易的股数（int）
+    :param price: 每股的价格（台幣）（暂不使用，只是保持接口统一）
+    :return: 计算结果手续费
+    """
+    # 每股手续费0.01
+    commission = trade_cnt * 0.01
+    if commission < 2.99:
+        # 最低消费2.99
+        commission = 2.99
+    return commission
+
 def calc_commission_cn(trade_cnt, price):
     """
     a股计算交易费用：印花税＋佣金： 印花税万3，佣金万2.5
@@ -171,27 +185,9 @@ class AbuCommission(object):
         market = ABuEnv.g_market_target if ABuMarket.g_use_env_market_set \
             else OrderMarket(a_order).symbol_market
         # 不同的市场不同的计算手续费方法
-        if market == EMarketTargetType.E_MARKET_TARGET_US:
-            # 美股
-            calc_commission_func = calc_commission_us
-        elif market == EMarketTargetType.E_MARKET_TARGET_CN:
-            # a股
-            calc_commission_func = calc_commission_cn
-        elif market == EMarketTargetType.E_MARKET_TARGET_HK:
-            # h股
-            calc_commission_func = calc_commission_hk
-        elif market == EMarketTargetType.E_MARKET_TARGET_TC:
-            # 币类
-            calc_commission_func = calc_commission_tc
-        elif market == EMarketTargetType.E_MARKET_TARGET_FUTURES_CN:
-            # 期货
-            calc_commission_func = partial(calc_commission_futures_cn, symbol_name=a_order.buy_symbol)
-        elif market == EMarketTargetType.E_MARKET_TARGET_OPTIONS_US:
-            # 美股期权
-            calc_commission_func = calc_options_us
-        elif market == EMarketTargetType.E_MARKET_TARGET_FUTURES_GLOBAL:
-            # 国际期货
-            calc_commission_func = calc_commission_futures_global
+        if market == EMarketTargetType.E_MARKET_TARGET_TW:
+            # 台股
+            calc_commission_func = calc_commission_tw
         else:
             raise TypeError('buy_stock market error!!!')
         return calc_commission_func

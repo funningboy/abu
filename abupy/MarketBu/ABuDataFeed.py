@@ -14,7 +14,7 @@ import os
 import random
 import math
 import sqlite3 as sqlite
-
+import requests
 import pandas as pd
 
 from ..CoreBu.ABuEnv import EMarketTargetType, EMarketSubType
@@ -192,16 +192,15 @@ class FINMINDApi(StockBaseMarket, SupportMixin):
     """finmindtrader 数据源，支持台股"""
 
     LOGIN_URL = "https://api.finmindtrade.com/api/v4/login"
+    URL = "https://api.finmindtrade.com/api/v4/data"
 
     def __init__(self, symbol):
         """
         :param symbol: Symbol类型对象
         """
         super(FINMINDApi, self).__init__(symbol)
-        
-        if EFINMIND.E_FINDMIND_CONNECT == 0:
-            self.connect()
-            EFINMIND.E_FINDMIND_CONNECT = 1
+        self.token = ''
+        #self.connect()
 
         # 设置数据源解析对象类
         self.data_parser_cls = FINMINDParser
@@ -210,12 +209,12 @@ class FINMINDApi(StockBaseMarket, SupportMixin):
         try:
             userid = EFINDMINDGateWay.E_FINDMIND_USERID
             password = EFINDMINDGateWay.E_FINDMIND_PASSWORD
-            parload = {
+            parameter = {
                 "user_id": userid,
                 "password": password,
             }
-            data = requests.post(LOGIN_URL, data=parload)
-            data = data.json()
+            resp = requests.post(FINMINDApi.LOGIN_URL, data=parameter)
+            data = resp.json()
             self.token = data['token']
         except Exception as exc:
             logging.info(u'FinMind GateWay 登入失敗')
@@ -239,17 +238,17 @@ class FINMINDApi(StockBaseMarket, SupportMixin):
 
         parameter = {
             "dataset": "TaiwanStockPrice",
-            "data_id": self.symbol,
+            "data_id": self._symbol.value,
             "start_date": temp_start,
             "end_date": temp_end,
-            "token": self.token,
+            "token": '',
         }
-        data = requests.get(url, params=parameter)
-        if data is not None:
-            kl_pd = self.data_parser_cls(self._symbol, data.json()).df
+        resp = requests.get(FINMINDApi.URL, params=parameter)
+        if resp is not None:
+            kl_pd = self.data_parser_cls(self._symbol, resp.json()).df
         else:
             return None
-        return StockBaseMarket._fix_kline_pd(kl_df, n_folds, start, end)
+        return StockBaseMarket._fix_kline_pd(kl_pd, n_folds, start, end)
 
     def minute(self, n_fold=5, *args, **kwargs):
         """分钟k线接口"""
@@ -265,10 +264,7 @@ class SINOPACApi(StockBaseMarket, SupportMixin):
         """
         super(SINOPACApi, self).__init__(symbol)
         self.api = sj.Shioaji()
-
-        if ESINOPACGateWay.E_SINOPAC_CONNECT == 0:
-            self.connect()
-            ESINOPACGateWay.E_SINOPAC_CONNECT = 1
+        self.connect()
 
         try:
             self.contract = self.api.Contracts.Stocks(symbol)
@@ -305,10 +301,10 @@ class SINOPACApi(StockBaseMarket, SupportMixin):
         if end != None:
             temp_end = end
         kbars = api.kbars(self.connect, start=temp_start, end=temp_end)
-        kl_df = self.data_parser_cls(self._symbol, pd.DataFrame({**kbars}).to_josn()).df
-        if kl_df is None:
+        kl_pd = self.data_parser_cls(self._symbol, pd.DataFrame({**kbars}).to_josn()).df
+        if kl_pd is None:
             return None
-        return StockBaseMarket._fix_kline_pd(kl_df, n_folds, start, end)
+        return StockBaseMarket._fix_kline_pd(kl_pd, n_folds, start, end)
 
     def minute(self, n_fold=5, *args, **kwargs):
         """分钟k线接口"""

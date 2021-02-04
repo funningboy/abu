@@ -12,7 +12,7 @@ from ..WidgetBu.ABuWGBase import WidgetBase, WidgetSearchBox
 from ..MarketBu import ABuMarket
 from ..CoreBu import ABuEnv
 from ..UtilBu.ABuStrUtil import to_unicode
-from ..MarketBu.ABuSymbolStock import AbuSymbolCN, AbuSymbolUS, AbuSymbolHK
+from ..MarketBu.ABuSymbolStock import AbuSymbolTW
 from ..MarketBu.ABuSymbolFutures import AbuFuturesCn, AbuFuturesGB
 
 __author__ = '阿布'
@@ -36,24 +36,11 @@ class WidgetSymbolChoice(WidgetBase):
         self.choice_symbols.observe(self.choice_symbols_select, names='value')
 
         # 构建所有沙盒中的数据序列
-        market_title = [u'美股', u'A股', u'港股', u'国内', u'国际', u'币类']
-        us_seed_symbol = [to_unicode('{}:{}'.format(AbuSymbolUS()[symbol].co_name.values[0], symbol))
-                          for symbol in ABuMarket.K_SAND_BOX_US]
-        cn_seed_symbol = [to_unicode('{}:{}'.format(AbuSymbolCN()[symbol].co_name.values[0], symbol))
-                          for symbol in ABuMarket.K_SAND_BOX_CN]
-        hk_seed_symbol = [to_unicode('{}:{}'.format(AbuSymbolHK()[symbol].co_name.values[0], symbol))
-                          for symbol in ABuMarket.K_SAND_BOX_HK]
-        fcn_seed_symbol = [to_unicode('{}:{}'.format(AbuFuturesCn()[symbol]['product'].values[0], symbol))
-                           for symbol in AbuFuturesCn().symbol]
-        fgb_seed_symbol = [to_unicode('{}:{}'.format(AbuFuturesGB()[symbol]['product'].values[0], symbol))
-                           for symbol in AbuFuturesGB().symbol]
+        market_title = [u'台股']
+        tw_seed_symbol = [to_unicode('{}:{}'.format(AbuSymbolTW()[symbol].co_name.values[0], symbol))
+                          for symbol in ABuMarket.K_SAND_BOX_TW]
         # 沙盒中的数据序列构建数据字典
-        self.market_dict = {u'美股': us_seed_symbol,
-                            u'A股': cn_seed_symbol,
-                            u'港股': hk_seed_symbol,
-                            u'国内': fcn_seed_symbol,
-                            u'国际': fgb_seed_symbol,
-                            u'币类': [u'比特币:btc', u'莱特币:ltc']}
+        self.market_dict = {u'台股': tw_seed_symbol}
 
         # 一个市场一个tab，tab中的symbol为沙盒中的symbol
         self.market_widget_tab = widgets.Tab()
@@ -74,12 +61,7 @@ class WidgetSymbolChoice(WidgetBase):
 
         # 下拉选择标尺大盘
         self.market = widgets.Dropdown(
-            options={u'美股': EMarketTargetType.E_MARKET_TARGET_US.value,
-                     u'A股': EMarketTargetType.E_MARKET_TARGET_CN.value,
-                     u'港股': EMarketTargetType.E_MARKET_TARGET_HK.value,
-                     u'国内期货': EMarketTargetType.E_MARKET_TARGET_FUTURES_CN.value,
-                     u'国际期货': EMarketTargetType.E_MARKET_TARGET_FUTURES_GLOBAL.value,
-                     u'数字货币': EMarketTargetType.E_MARKET_TARGET_TC.value},
+            options={u'台股': EMarketTargetType.E_MARKET_TARGET_TW.value},
             value=ABuEnv.g_market_target.value,
             description=u'大盘市场:',
         )

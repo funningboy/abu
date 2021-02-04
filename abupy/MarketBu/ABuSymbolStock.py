@@ -9,6 +9,7 @@ from __future__ import division
 import os
 
 import pandas as pd
+import requests
 
 from ..CoreBu.ABuFixes import six
 from ..CoreBu.ABuBase import FreezeAttrMixin
@@ -19,12 +20,13 @@ from ..UtilBu.ABuStrUtil import digit_str
 from ..MarketBu.ABuSymbol import Symbol, code_to_symbol
 from ..CrawlBu.ABuXqConsts import columns_map
 
+
 __author__ = '阿布'
 __weixin__ = 'abu_quant'
 
 _rom_dir = ABuEnv.g_project_rom_data_dir
 """台股symbol，文件定期重新爬取，更新"""
-_stock_code_hk = os.path.join(_rom_dir, 'stock_code_TW.csv')
+_stock_code_tw = os.path.join(_rom_dir, 'stock_code_TW.csv')
 
 
 class AbuStockBaseWrap(object):
@@ -145,9 +147,25 @@ class AbuSymbolStockBase(FreezeAttrMixin):
 class AbuSymbolTW(AbuSymbolStockBase):
     """美股symbol类，singleton"""
 
+    URL = "https://api.finmindtrade.com/api/v4/data"
+
+    COL_REMAP = {
+        'stock_id': 'symbol',
+        'stock_name': 'co_name',
+        'type': 'exchange',
+        'industry_category': 'industry'
+    }
+
     def __init__(self):
         """被AbuStockBaseWrap替换__init__，即只需读取美股数据到self.df 后续在类装饰器完成"""
-        self.df = pd.read_csv(_stock_code_tw, index_col=0, dtype=str)
+        #self.df = pd.read_csv(_stock_code_tw, index_col=0, dtype=str)
+        parameter = {
+            "dataset": "TaiwanStockInfo",
+            "token": "", # 參考登入，獲取金鑰
+        }
+        resp = requests.get(AbuSymbolTW.URL, params=parameter)
+        data = resp.json()
+        self.df = pd.DataFrame(data["data"]).rename(columns=AbuSymbolTW.COL_REMAP)
 
     def __contains__(self, item):
         """成员测试：是否item在self.df.symbol.values中"""
@@ -171,12 +189,12 @@ class AbuSymbolTW(AbuSymbolStockBase):
 
     def symbol_func(self, df):
         """
-        通过df组装支持ABuSymbolPd.make_kl_df使用的symbol，使用('us' + df['symbol']).tolist()
+        通过df组装支持ABuSymbolPd.make_kl_df使用的symbol，使用(df['symbol']).tolist()
         :param df: pd.DataFrame对象
         :return: 支持ABuSymbolPd.make_kl_df使用的symbol序列
         """
         # noinspection PyUnresolvedReferences
-        return (EMarketTargetType.E_MARKET_TARGET_TW.value + df['symbol']).tolist()
+        return (df['symbol']).tolist()
 
     def all_symbol(self, index=False):
         """
@@ -185,16 +203,16 @@ class AbuSymbolTW(AbuSymbolStockBase):
         :return: 美股全市场symbol序列
         """
 
-        # TWSE
+        # TWSE,TPEX
         df_filter = self.df[(self.df['exchange'] == EMarketSubType.TW_TWSE.value) |
-                            (self.df['exchange'] == EMarketSubType.TW_OTC.value)]
+                            (self.df['exchange'] == EMarketSubType.TW_TPEX.value)]
         # 通过symbol_func转换为外部可直接使用ABuSymbolPd.make_kl_df请求的symbol序列
         all_symbol = self.symbol_func(df_filter)
         all_symbol = list(set(all_symbol))
-        if index:
-            # 需要返回大盘symbol
-            all_symbol.extend(['{}{}'.format(EMarketTargetType.E_MARKET_TARGET_TW.value, symbol)
-                               for symbol in Symbol.TW_INDEX])
+        #if index:
+        #    # 需要返回大盘symbol
+        #    all_symbol.extend(['{}{}'.format(EMarketTargetType.E_MARKET_TARGET_TW.value, symbol)
+        #                       for symbol in Symbol.TW_INDEX])
         return all_symbol
 
     def query_symbol_sub_market(self, code, default=EMarketSubType.TW_TWSE.value):

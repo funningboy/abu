@@ -26,7 +26,7 @@ def code_to_symbol(code, rs=True):
     :return: Symbol对象
     """
     from ..MarketBu.ABuSymbolFutures import AbuFuturesCn, AbuFuturesGB
-    from ..MarketBu.ABuSymbolStock import AbuSymbolCN, AbuSymbolUS
+    from ..MarketBu.ABuSymbolStock import AbuSymbolTW
     from ..MarketBu.ABuMarket import all_symbol
 
     if isinstance(code, Symbol):
@@ -157,7 +157,7 @@ class Symbol(object):
     """统一所有市场的symbol，统一对外接口对象"""
 
     # 定义使用的台股大盘
-    TW_INDEX = ['.TWSE', '.OTC']
+    TW_INDEX = ['.TWSE', '.TPEX']
 
     def __init__(self, market, sub_market, symbol_code):
         """
@@ -197,9 +197,9 @@ class Symbol(object):
         """判定是否台股 TWSE 交易所 symbol"""
         return self.sub_market == EMarketSubType.TW_TWSE
 
-    def is_tw_otc_stock(self):
-        """判定是否台股 OTC 交易所 symbol"""
-        return self.sub_market == EMarketSubType.TW_OTC
+    def is_tw_tpex_stock(self):
+        """判定是否台股 TPEX 交易所 symbol"""
+        return self.sub_market == EMarketSubType.TW_TPEX
 
     def is_tw_index(self):
         """判定是否美股 大盘"""
@@ -216,5 +216,5 @@ class IndexSymbol(object):
     # 台股大盘TWSE Symbol对象
     TWSE = Symbol(EMarketTargetType.E_MARKET_TARGET_TW, EMarketSubType.TW_TWSE, '.TWSE')
     # 美股大盘IXIC Symbol对象
-    OTC = Symbol(EMarketTargetType.E_MARKET_TARGET_TW, EMarketSubType.TW_OTC, '.OTC')
+    TPEX = Symbol(EMarketTargetType.E_MARKET_TARGET_TW, EMarketSubType.TW_TPEX, '.TPEX')
  

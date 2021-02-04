@@ -248,11 +248,13 @@ def _do_plot_candle(date, p_open, high, low, close, volume, view_index, symbol, 
     # 需要内部import不然每次import abupy都有warning，特别是子进程很烦人
     try:
         # noinspection PyUnresolvedReferences, PyDeprecation
-        import matplotlib.finance as mpf
+        import mplfinance as mpf
+        import matplotlib.date as mdf
     except ImportError:
         # 2.2 才会有
         # noinspection PyUnresolvedReferences, PyDeprecation
-        import matplotlib.mpl_finance as mpf
+        import mplfinance as mpf
+        import matplotlib.date as mdf
 
     if not g_only_draw_price:
         # 成交量，价格都绘制
@@ -265,7 +267,7 @@ def _do_plot_candle(date, p_open, high, low, close, volume, view_index, symbol, 
         # 端线图绘制
         qutotes = []
         for index, (d, o, c, l, h) in enumerate(zip(date, p_open, close, low, high)):
-            d = index if minute else mpf.date2num(d)
+            d = index if minute else mdf.date2num(d)
             val = (d, o, c, l, h)
             qutotes.append(val)
         # plot_day_summary_oclh接口，与mpf.candlestick_ochl不同，即数据顺序为开收低高
@@ -274,7 +276,7 @@ def _do_plot_candle(date, p_open, high, low, close, volume, view_index, symbol, 
         # k线图绘制
         qutotes = []
         for index, (d, o, c, h, l) in enumerate(zip(date, p_open, close, high, low)):
-            d = index if minute else mpf.date2num(d)
+            d = index if minute else mdf.date2num(d)
             val = (d, o, c, h, l)
             qutotes.append(val)
         # mpf.candlestick_ochl即数据顺序为开收高低

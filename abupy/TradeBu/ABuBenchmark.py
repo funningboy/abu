@@ -33,27 +33,10 @@ class AbuBenchmark(PickleStateMixin):
             return
 
         if benchmark is None:
-            if ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_US:
-                # 美股
-                benchmark = IndexSymbol.IXIC
-            elif ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_HK:
-                # 港股
-                benchmark = IndexSymbol.HSI
-            elif ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_CN:
-                # a股
-                benchmark = IndexSymbol.SH
-            elif ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_FUTURES_CN:
-                # 国内期货
-                benchmark = IndexSymbol.BM_FUTURES_CN
-            elif ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_TC:
-                # 币类市场
-                benchmark = IndexSymbol.TC_INX
-            elif ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_OPTIONS_US:
-                # 美股期权暂时也以IXIC做为标尺，最好是外部参数中的benchmark设置
-                benchmark = IndexSymbol.IXIC
-            elif ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_FUTURES_GLOBAL:
-                # 国际期货暂时也以BM_FUTURES_GB做为标尺
-                benchmark = IndexSymbol.BM_FUTURES_GB
+            if ABuEnv.g_market_target == EMarketTargetType.E_MARKET_TARGET_TW:
+                # 台股
+                benchmark = IndexSymbol.TWSE
+                benchmark = '2330'
             else:
                 raise TypeError('benchmark is None AND g_market_target ERROR!')
 
