@@ -166,7 +166,7 @@ class AbuSymbolTW(AbuSymbolStockBase):
         resp = requests.get(AbuSymbolTW.URL, params=parameter)
         data = resp.json()
         self.df = pd.DataFrame(data["data"]).rename(columns=AbuSymbolTW.COL_REMAP)
-
+ 
     def __contains__(self, item):
         """成员测试：是否item在self.df.symbol.values中"""
         return digit_str(item) in self.df.symbol.values
@@ -204,8 +204,8 @@ class AbuSymbolTW(AbuSymbolStockBase):
         """
 
         # TWSE,TPEX
-        df_filter = self.df[(self.df['exchange'] == EMarketSubType.TW_TWSE.value) |
-                            (self.df['exchange'] == EMarketSubType.TW_TPEX.value)]
+        df_filter = self.df[(self.df['exchange'].str.upper() == EMarketSubType.TW_TWSE.value) |
+                            (self.df['exchange'].str.upper() == EMarketSubType.TW_TPEX.value)]
         # 通过symbol_func转换为外部可直接使用ABuSymbolPd.make_kl_df请求的symbol序列
         all_symbol = self.symbol_func(df_filter)
         all_symbol = list(set(all_symbol))
