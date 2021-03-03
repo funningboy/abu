@@ -16,6 +16,9 @@ class StockHisDataItem(BasePipeLineItem):
 class StockMarginDataItem(BasePipeLineItem):
     obj = scrapy.Field()
 
+class StockInstitutionInvestItem(BasePipeLineItem):
+	obj = scrapy.Field()
+
 class StockHisTraderItem(BasePipeLineItem):
     obj = scrapy.Field()
 

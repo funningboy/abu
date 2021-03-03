@@ -29,18 +29,25 @@ class StockHisTraderSpider(scrapy.Spider):
         StockHisTraderPipeline
     ])
 
-    #ex: http://fubon-ebrokerdj.fbs.com.tw/z/zc/zcx/zcx_2330.djhtm
-    URLStr = Template('http://fubon-ebrokerdj.fbs.com.tw/z/zc/zco/zco_$SYMBOL.djhtm')
+    #ex: http://fubon-ebrokerdj.fbs.com.tw/z/zc/zco/zco.djhtm?a=2330&e=2021-2-1&f=2021-2-2
+    URLStr = Template('http://fubon-ebrokerdj.fbs.com.tw/z/zc/zco/zco.djhtm?a=$SYMBOL&e=$EDATE&f=$EDATE')
     reDate = re.compile(r".*([0-9]*)\/([0-9]*)\/([0-9]*)", re.DOTALL | re.MULTILINE) # YY/MM/DD
+    reUnit = re.compile(r".*單位：張.*", re.DOTALL | re.MULTILINE)
+    #reUint = #股/張 1張=1000股
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.dateiso = date.today().isoformat() 
         self.symbols = all_symbol()
-       
+        #self.dateiso = '2020-12-04'
+        #self.symbols = ['2330']
+
     def start_requests(self):
+        edate = '-'.join(map(lambda x: str(int(x)), self.dateiso.split("-")))
+        headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0'}
         for symbol in self.symbols:
-            url = self.URLStr.substitute({'SYMBOL': symbol})
-            yield scrapy.Request(url=url, callback=self.parse, cb_kwargs={'symbol': symbol})
+            url = self.URLStr.substitute({'SYMBOL': symbol, 'EDATE': edate})
+            yield scrapy.Request(url=url, headers=headers, callback=self.parse, cb_kwargs={'symbol': symbol})
 
     def parse(self, response, symbol):
         to_float = lambda x: float(str(x.text).replace(',','').replace('%', '').replace(' ',''))
@@ -52,10 +59,11 @@ class StockHisTraderSpider(scrapy.Spider):
             values = list(map(to_float, table.find_all('td', {'class': 't3n1'})))
             traders = list(map(to_str, table.find_all('td', {'class': 't4t1'})))[:-4]
             cdate = list(map(to_str, table.find_all('div', {'class': 't11'})))[0]
-            grps = self.reDate.match(cdate).groups()
-            yy, mm, dd = grps[0], grps[1], grps[2]
-            yy = date.today().isoformat().split("-")[0] 
-            cdate = "{0}-{1}-{2}".format(yy, mm, dd)
+            cunit = self.reUnit.match(cdate)
+            #grps = self.reDate.match(cdate).groups()
+            #yy, mm, dd = grps[0], grps[1], grps[2]
+            #yy = date.today().isoformat().split("-")[0] 
+            #cdate = "{0}-{1}-{2}".format(yy, mm, dd)
         except Exception as e:
             yy, mm, dd = date.today().isoformat().split("-")[0:3] 
             cdate = "{0}-{1}-{2}".format(yy, mm, dd)
@@ -69,13 +77,14 @@ class StockHisTraderSpider(scrapy.Spider):
             yield(item)
             return   
 
+        cdate = self.dateiso
         TraderItem = {}
         TdItems = []
         for i,trader in enumerate(traders):
             TRADER = {
                 'tdname': trader,
-                'call'  : values[i*4],
-                'put'   : values[i*4+1],
+                'call'  : values[i*4] if cunit else values[i*4]//1000,
+                'put'   : values[i*4+1] if cunit else values[i*4+1]//1000,
                 'weight': values[i*4+3]
             }
             TdItems.append(TRADER)

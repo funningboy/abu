@@ -220,3 +220,62 @@ class StockHisTraderPipeline(BaseStockHisDB):
         spider.logger.debug("[MONGODB] pass ABuFubon.StockHisTrader symbol:{0} tdname:{1} call:{2}".format(symbol, obj['traders'][0]['tdname'], obj['traders'][0]['call']))
         return item
 
+
+class StockHisMarginPipeline(BaseStockHisDB):
+
+    def __init__(self, mongo_uri, mongo_db):
+        super().__init__(mongo_uri, mongo_db)
+        self.collect = 'StockHisMargin'
+
+    @check_spider_pipeline
+    def process_item(self, item, spider):
+        obj = item['obj']
+        symbol = obj['symbol']
+        
+        try:
+            oo = self.db[self.collect].find_one_and_update(
+                            {'date': obj['date'], 'symbol': obj['symbol'] }, # find
+                            {'$set': obj },   # update
+                            return_document = ReturnDocument.AFTER)
+            if oo == None:
+                self.db[self.collect].insert_one(obj)
+        except Exception as e:
+            spider.logger.exception("[MONGODB] store ABuFubon.StockHisMargin symbol:{0} Error:{1}".format(symbol, e))
+            return    
+
+        oo = self.db[self.collect].find_one(
+                            {'date': obj['date'], 'symbol': obj['symbol']}) # find
+
+        obj = oo
+        spider.logger.debug("[MONGODB] pass ABuFubon.StockHisMargin symbol:{0} ShortDivMagRatio:{1}".format(symbol, obj['ShortDivMagRatio']))
+        return item
+
+
+class StockInstitutionInvestPipeline(BaseStockHisDB):
+
+    def __init__(self, mongo_uri, mongo_db):
+        super().__init__(mongo_uri, mongo_db)
+        self.collect = 'StockInstitutionInvest'
+
+    @check_spider_pipeline
+    def process_item(self, item, spider):
+        obj = item['obj']
+        symbol = obj['symbol']
+        
+        try:
+            oo = self.db[self.collect].find_one_and_update(
+                            {'date': obj['date'], 'symbol': obj['symbol'] }, # find
+                            {'$set': obj },   # update
+                            return_document = ReturnDocument.AFTER)
+            if oo == None:
+                self.db[self.collect].insert_one(obj)
+        except Exception as e:
+            spider.logger.exception("[MONGODB] store ABuFubon.StockInstitutionInvest symbol:{0} Error:{1}".format(symbol, e))
+            return    
+
+        oo = self.db[self.collect].find_one(
+                            {'date': obj['date'], 'symbol': obj['symbol']}) # find
+
+        obj = oo
+        spider.logger.debug("[MONGODB] pass ABuFubon.StockInstitutionInvest symbol:{0} H:{1}".format(symbol, obj['H']))
+        return item
