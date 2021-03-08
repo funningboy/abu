@@ -19,7 +19,7 @@ from ABuFubon.pipelines import StockHisDataPipeline, SpiderErrPipeline
 
 from abupy.MarketBu.ABuMarket import all_symbol 
 from abupy.UtilBu.ABuDateUtil import str_to_datetime
-
+from abupy.CoreBu.ABuEnv import g_cdataiso, g_ddateiso
 
 class StockHisDataSpider2(scrapy.Spider):
     name = "StockHisDataSpider2"
@@ -43,11 +43,13 @@ class StockHisDataSpider2(scrapy.Spider):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.symbols = all_symbol()
-        #self.symbols = ['2330']
+        self.cdateiso = g_cdataiso 
+        self.ddateiso = g_ddateiso
+
         
     def start_requests(self):
         for symbol in self.symbols:
-            self.parameter.update({'data_id': symbol})
+            self.parameter.update({'data_id': symbol, 'start_date': self.cdateiso, 'end_date': self.ddateiso})
             url = "{0}?{1}".format(self.URLStr, urllib.parse.urlencode(self.parameter))
             yield scrapy.Request(url=url, callback=self.parse, cb_kwargs={'symbol': symbol})
 

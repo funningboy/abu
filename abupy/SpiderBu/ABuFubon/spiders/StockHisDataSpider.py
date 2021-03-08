@@ -17,8 +17,8 @@ from ABuFubon.items import StockHisDataItem, SpiderErrItem
 from ABuFubon.pipelines import StockHisDataPipeline, SpiderErrPipeline
 
 from abupy.MarketBu.ABuMarket import all_symbol 
-from abupy.UtilBu.ABuDateUtil import str_to_datetime
-
+from abupy.UtilBu.ABuDateUtil import str_to_datetime, twtime_to_utc_str
+from abupy.CoreBu.ABuEnv import g_cdataiso, g_ddateiso
 
 class StockHisDataSpider(scrapy.Spider):
     name = "StockHisDataSpider"

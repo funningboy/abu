@@ -17,7 +17,7 @@ from ABuFubon.pipelines import StockHisTraderPipeline, SpiderErrPipeline
 from abupy.MarketBu.ABuMarket import all_symbol
 #from abupy.MarketBu.ABuMarket import all_trader
 from abupy.UtilBu.ABuDateUtil import str_to_datetime
-
+from abupy.CoreBu.ABuEnv import g_cdataiso, g_ddateiso
 
 class StockHisTraderSpider(scrapy.Spider):
     name = "StockHisTraderSpider"
@@ -37,10 +37,8 @@ class StockHisTraderSpider(scrapy.Spider):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.dateiso = date.today().isoformat() 
+        self.dateiso = g_ddateiso 
         self.symbols = all_symbol()
-        #self.dateiso = '2020-12-04'
-        #self.symbols = ['2330']
 
     def start_requests(self):
         edate = '-'.join(map(lambda x: str(int(x)), self.dateiso.split("-")))

@@ -293,3 +293,7 @@ def time_seconds():
 def time_zone():
     """返回时区int值"""
     return time.timezone
+
+
+def twtime_to_utc_str(yy, mm, dd):
+    return "{0}-{1}-{2}".format(int(yy)+1911, mm, dd)

@@ -15,7 +15,8 @@ from ABuFubon.pipelines import StockHisMarginPipeline, SpiderErrPipeline
 
 from abupy.MarketBu.ABuMarket import all_symbol
 #from abupy.MarketBu.ABuMarket import all_trader
-from abupy.UtilBu.ABuDateUtil import str_to_datetime
+from abupy.UtilBu.ABuDateUtil import str_to_datetime, twtime_to_utc_str
+from abupy.CoreBu.ABuEnv import g_cdataiso, g_ddateiso
 
 
 class StockHisMarginSpider(scrapy.Spider):
@@ -36,12 +37,9 @@ class StockHisMarginSpider(scrapy.Spider):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.cdateiso = (date.today() - timedelta(days=10)).isoformat()
-        self.ddateiso = date.today().isoformat()  
         self.symbols = all_symbol()
-        #self.cdateiso = '2020-12-04'
-        #self.ddateiso = '2020-12-31'
-        self.symbols = ['3008']
+        self.cdateiso = g_cdataiso
+        self.ddateiso = g_ddateiso
 
     def start_requests(self):
         cdate = '-'.join(map(lambda x: str(int(x)), self.cdateiso.split("-")))
@@ -60,9 +58,9 @@ class StockHisMarginSpider(scrapy.Spider):
             table = soup.find_all('table', {'class': 't01'})[0]
             values = list(map(to_float, table.find_all('td', {'class': 't3n1'})))
             cdates = list(map(to_str, table.find_all('td', {'class': 't3n0'})))
+            # DateUtil
             yy, mm, dd = cdates[1].split('/') # cdata[0] is new line
-            yy = int(yy) + 1911;
-            cdate = "{0}-{1}-{2}".format(yy, mm, dd)
+            cdate = twtime_to_utc_str(yy, mm, dd)
         except Exception as e:
             yy, mm, dd = date.today().isoformat().split("-")[0:3] 
             cdate = "{0}-{1}-{2}".format(yy, mm, dd)

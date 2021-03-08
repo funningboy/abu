@@ -277,5 +277,5 @@ class StockInstitutionInvestPipeline(BaseStockHisDB):
                             {'date': obj['date'], 'symbol': obj['symbol']}) # find
 
         obj = oo
-        spider.logger.debug("[MONGODB] pass ABuFubon.StockInstitutionInvest symbol:{0} H:{1}".format(symbol, obj['H']))
+        spider.logger.debug("[MONGODB] pass ABuFubon.StockInstitutionInvest symbol:{0} 1DayHold:{1}".format(symbol, obj['1DayHold']))
         return item
