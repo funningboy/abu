@@ -50,6 +50,7 @@ def _benchmark(df, benchmark, symbol):
         return None
 
     # 两个金融时间序列通过loc寻找交集
+    print (benchmark.kl_pd.index)
     kl_pd = df.loc[benchmark.kl_pd.index]
     # nan的date个数即为不相交的个数
     nan_cnt = kl_pd['date'].isnull().value_counts()

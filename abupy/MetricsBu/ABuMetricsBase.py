@@ -91,7 +91,7 @@ class AbuMetricsBase(object):
         if self.orders_pd is not None and self.capital is not None and 'capital_blance' in self.capital.capital_pd:
             self.valid = True
         # ipython notebook下使用logging.info
-        self.log_func = logging.info if ABuEnv.g_is_ipython else print
+        self.log_func = print #logging.info if ABuEnv.g_is_ipython else print
 
     @valid_check
     def fit_metrics(self):

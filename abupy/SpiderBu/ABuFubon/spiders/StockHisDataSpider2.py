@@ -17,9 +17,9 @@ import urllib
 from ABuFubon.items import StockHisDataItem, SpiderErrItem
 from ABuFubon.pipelines import StockHisDataPipeline, SpiderErrPipeline
 
-from abupy.MarketBu.ABuMarket import all_symbol 
-from abupy.UtilBu.ABuDateUtil import str_to_datetime
-from abupy.CoreBu.ABuEnv import g_cdataiso, g_ddateiso
+from abupy.MarketBu import ABuMarket  
+from abupy.UtilBu import ABuDateUtil 
+from abupy.CoreBu import ABuEnv
 
 class StockHisDataSpider2(scrapy.Spider):
     name = "StockHisDataSpider2"
@@ -42,9 +42,9 @@ class StockHisDataSpider2(scrapy.Spider):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.symbols = all_symbol()
-        self.cdateiso = g_cdataiso 
-        self.ddateiso = g_ddateiso
+        self.symbols = ABuMarket.all_symbol()
+        self.cdateiso = ABuEnv.g_cdataiso 
+        self.ddateiso = ABuEnv.g_ddateiso
 
         
     def start_requests(self):
@@ -54,7 +54,6 @@ class StockHisDataSpider2(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse, cb_kwargs={'symbol': symbol})
 
     def parse(self, response, symbol):
-        
         text = json.loads(response.text)
         if text['msg'] != 'success':
             return
@@ -63,7 +62,7 @@ class StockHisDataSpider2(scrapy.Spider):
         H = None
         for it in text['data']:
             OHLCV = {
-                'date': str_to_datetime(it['date']),
+                'date': ABuDateUtil.str_to_datetime(it['date']),
                 'symbol': it['stock_id'],
                 'O': to_float(it['open']),
                 'H': to_float(it['max']),

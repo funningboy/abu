@@ -147,10 +147,27 @@ class AbuSymbolStockBase(FreezeAttrMixin):
 class AbuSymbolTW(AbuSymbolStockBase):
     """台股symbol类，singleton"""
 
+    URL = "https://api.finmindtrade.com/api/v4/data"
+
+    COL_REMAP = {
+        'stock_id': 'symbol',
+        'stock_name': 'co_name',
+        'type': 'exchange',
+        'industry_category': 'industry'
+    }
+
     # TODO
     def __init__(self):
         """被AbuStockBaseWrap替换__init__，即只需读取美股数据到self.df 后续在类装饰器完成"""
-       
+        #self.df = pd.read_csv(_stock_code_tw, index_col=0, dtype=str)
+        parameter = {
+            "dataset": "TaiwanStockInfo",
+            "token": "", # 參考登入，獲取金鑰
+        }
+        resp = requests.get(AbuSymbolTW.URL, params=parameter)
+        data = resp.json()
+        self.df = pd.DataFrame(data["data"]).rename(columns=AbuSymbolTW.COL_REMAP)
+        
     def __contains__(self, item):
         """成员测试：是否item在self.df.symbol.values中"""
         return digit_str(item) in self.df.symbol.values

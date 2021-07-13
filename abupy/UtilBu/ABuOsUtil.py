@@ -10,7 +10,7 @@ import logging
 from ..CoreBu import ABuEnv
 from ..UtilBu.ABuDTUtil import catch_error
 
-log_func = logging.info if ABuEnv.g_is_ipython else print
+log_func = print #logging.info if ABuEnv.g_is_ipython else print
 
 
 @catch_error()
@@ -24,8 +24,8 @@ def show_msg(title, msg, log=False):
     :return:
     """
     # 由于catch_error忽略错误，所有主要信息还是先打印
-    if log:
-        log_func(u'{}\n{}'.format(title, msg))
+    #if log:
+    #    log_func(u'{}\n{}'.format(title, msg))
     if ABuEnv.g_is_mac_os:
         from ..UtilBu.ABuMacUtil import show_msg as do_show_msg
     else:

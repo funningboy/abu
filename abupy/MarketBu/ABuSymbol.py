@@ -25,7 +25,7 @@ def code_to_symbol(code, rs=True):
     :param rs: 没有匹配上是否对外抛异常，默认True
     :return: Symbol对象
     """
-    from ..MarketBu.ABuSymbolFutures import AbuFuturesCn, AbuFuturesGB
+    #from ..MarketBu.ABuSymbolFutures import AbuFuturesCn, AbuFuturesGB
     from ..MarketBu.ABuSymbolStock import AbuSymbolTW
     from ..MarketBu.ABuMarket import all_symbol
 
@@ -190,7 +190,7 @@ class Symbol(object):
         return self.symbol_code
 
     def is_tw_stock(self):
-        """判定是否美股 symbol"""
+        """判定是否台股 symbol"""
         return self.market == EMarketTargetType.E_MARKET_TARGET_TW
 
     def is_tw_twse_stock(self):

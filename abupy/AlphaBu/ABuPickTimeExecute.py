@@ -148,6 +148,7 @@ def do_symbols_with_same_factors(target_symbols, benchmark, buy_factors, sell_fa
         return r_orders_pd, r_action_pd, r_all_fit_symbols_cnt
 
     orders_pd, action_pd, all_fit_symbols_cnt = _batch_symbols_with_same_factors(buy_factors, sell_factors)
+
     if orders_pd is not None and action_pd is not None:
 
         # 要sort'Date', 'action'两项，不然之后的行apply_action_to_capital后有问题

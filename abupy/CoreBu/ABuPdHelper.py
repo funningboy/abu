@@ -31,7 +31,7 @@ except ImportError:
 
 try:
     # noinspection PyUnresolvedReferences
-    from pandas.core.window import EWM
+    #from pandas.core.window import EWM
     g_pandas_has_ewm = True
 except ImportError:
     g_pandas_has_ewm = False

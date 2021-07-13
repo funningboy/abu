@@ -16,9 +16,9 @@ import re
 from ABuFubon.items import StockHisDataItem, SpiderErrItem
 from ABuFubon.pipelines import StockHisDataPipeline, SpiderErrPipeline
 
-from abupy.MarketBu.ABuMarket import all_symbol 
-from abupy.UtilBu.ABuDateUtil import str_to_datetime, twtime_to_utc_str
-from abupy.CoreBu.ABuEnv import g_cdataiso, g_ddateiso
+from abupy.MarketBu import ABuMarket 
+from abupy.UtilBu import ABuDateUtil
+from abupy.CoreBu import ABuEnv
 
 class StockHisDataSpider(scrapy.Spider):
     name = "StockHisDataSpider"
@@ -43,7 +43,7 @@ class StockHisDataSpider(scrapy.Spider):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.symbols = all_symbol()
+        self.symbols = ABuMarket.all_symbol()
         
     def start_requests(self):
         headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0'}
@@ -67,7 +67,7 @@ class StockHisDataSpider(scrapy.Spider):
             yy, mm, dd = date.today().isoformat().split("-")[0:3] 
             cdate = "{0}-{1}-{2}".format(yy, mm, dd)
             ERR = {
-                'date': str_to_datetime(cdate),
+                'date': ABuDateUtil.str_to_datetime(cdate),
                 'cls': self.name,
                 'msg': "symbol:{0}, fetch html.table Error".format(symbol)
             }
@@ -82,7 +82,7 @@ class StockHisDataSpider(scrapy.Spider):
             OHLCV[k] = to_float(values[self.OHLCV_IDX[k]])
 
         OHLCV.update({
-            'date': str_to_datetime(cdate),
+            'date': ABuDateUtil.str_to_datetime(cdate),
             'symbol': symbol
         }) 
         item = StockHisDataItem({'obj': OHLCV, 'pipeline': StockHisDataPipeline})

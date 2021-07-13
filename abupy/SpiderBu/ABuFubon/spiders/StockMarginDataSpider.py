@@ -13,10 +13,10 @@ import re
 from ABuFubon.items import StockMarginDataItem, SpiderErrItem
 from ABuFubon.pipelines import StockHisMarginPipeline, SpiderErrPipeline
 
-from abupy.MarketBu.ABuMarket import all_symbol
+from abupy.MarketBu import ABuMarket
 #from abupy.MarketBu.ABuMarket import all_trader
-from abupy.UtilBu.ABuDateUtil import str_to_datetime, twtime_to_utc_str
-from abupy.CoreBu.ABuEnv import g_cdataiso, g_ddateiso
+from abupy.UtilBu import ABuDateUtil
+from abupy.CoreBu import ABuEnv
 
 
 class StockHisMarginSpider(scrapy.Spider):
@@ -37,9 +37,9 @@ class StockHisMarginSpider(scrapy.Spider):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.symbols = all_symbol()
-        self.cdateiso = g_cdataiso
-        self.ddateiso = g_ddateiso
+        self.symbols = ABuMarket.all_symbol()
+        self.cdateiso = ABuEnv.g_cdataiso
+        self.ddateiso = ABuEnv.g_ddateiso
 
     def start_requests(self):
         cdate = '-'.join(map(lambda x: str(int(x)), self.cdateiso.split("-")))
@@ -60,12 +60,12 @@ class StockHisMarginSpider(scrapy.Spider):
             cdates = list(map(to_str, table.find_all('td', {'class': 't3n0'})))
             # DateUtil
             yy, mm, dd = cdates[1].split('/') # cdata[0] is new line
-            cdate = twtime_to_utc_str(yy, mm, dd)
+            cdate = ABuDateUtil.twtime_to_utc_str(yy, mm, dd)
         except Exception as e:
             yy, mm, dd = date.today().isoformat().split("-")[0:3] 
             cdate = "{0}-{1}-{2}".format(yy, mm, dd)
             ERR = {
-                'date': str_to_datetime(cdate),
+                'date': ABuDateUtil.str_to_datetime(cdate),
                 'cls': self.name,
                 'msg': "symbol:{0}, fetch html.table Error".format(symbol)
             }
@@ -77,7 +77,7 @@ class StockHisMarginSpider(scrapy.Spider):
 
         # update latest one
         MarginItem = {
-            'date': str_to_datetime(cdate),
+            'date': ABuDateUtil.str_to_datetime(cdate),
             'MagPurchBuy': values[0],     #融資 買進 
             'MagPurchSell': values[1], #融資 賣出 
             'MagPurchCashRepay': values[2], # 融資 現償

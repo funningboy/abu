@@ -110,7 +110,7 @@ class AbuOrder(object):
                     market, ABuEnv.g_market_target))
 
             if buy_cnt < min_cnt:
-                # 不够买最少单位量
+                print ("不夠最小單位量")
                 return
 
             # 如下生成order内部数据

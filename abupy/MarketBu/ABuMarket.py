@@ -325,11 +325,7 @@ def is_in_sand_box(symbol):
     cs = code_to_symbol(symbol, rs=False)
     if cs is None:
         return False
-    if cs.is_futures() or cs.is_tc():
-        # 沙盒数据支持完整期货和电子货币市场
-        return True
-    if symbol in K_SAND_BOX_TW:
-        # A股，美股，港股沙盒数据需要在沙盒数据序列中
+    if cs.is_tw_stock():
         return True
     return False
 

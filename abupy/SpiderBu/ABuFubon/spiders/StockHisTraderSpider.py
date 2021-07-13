@@ -14,10 +14,10 @@ import re
 from ABuFubon.items import StockHisTraderItem, SpiderErrItem
 from ABuFubon.pipelines import StockHisTraderPipeline, SpiderErrPipeline
 
-from abupy.MarketBu.ABuMarket import all_symbol
+from abupy.MarketBu import ABuMarket 
 #from abupy.MarketBu.ABuMarket import all_trader
-from abupy.UtilBu.ABuDateUtil import str_to_datetime
-from abupy.CoreBu.ABuEnv import g_cdataiso, g_ddateiso
+from abupy.UtilBu import ABuDateUtil 
+from abupy.CoreBu import ABuEnv 
 
 class StockHisTraderSpider(scrapy.Spider):
     name = "StockHisTraderSpider"
@@ -37,8 +37,9 @@ class StockHisTraderSpider(scrapy.Spider):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.dateiso = g_ddateiso 
-        self.symbols = all_symbol()
+        self.dateiso = ABuEnv.g_ddateiso 
+        self.symbols = ABuMarket.all_symbol()
+        #self.symbols = ['020003']
 
     def start_requests(self):
         edate = '-'.join(map(lambda x: str(int(x)), self.dateiso.split("-")))
@@ -66,7 +67,7 @@ class StockHisTraderSpider(scrapy.Spider):
             yy, mm, dd = date.today().isoformat().split("-")[0:3] 
             cdate = "{0}-{1}-{2}".format(yy, mm, dd)
             ERR = {
-                'date': str_to_datetime(cdate),
+                'date': ABuDateUtil.str_to_datetime(cdate),
                 'cls': self.name,
                 'msg': "symbol:{0}, fetch html.table Error".format(symbol)
             }
@@ -88,7 +89,7 @@ class StockHisTraderSpider(scrapy.Spider):
             TdItems.append(TRADER)
 
         TraderItem.update({
-            'date': str_to_datetime(cdate),
+            'date': ABuDateUtil.str_to_datetime(cdate),
             'traders': TdItems,
             'symbol': symbol
         }) 

@@ -68,17 +68,9 @@ class WidgetEnvSetMixin(object):
 
         """数据源进行切换"""
         self.data_source_accordion = widgets.Accordion()
-        self.date_source_dict = {EMarketSourceType.E_MARKET_SOURCE_bd.value: u'百度数据源(美股，A股，港股)',
-                                 EMarketSourceType.E_MARKET_SOURCE_tx.value: u'腾讯数据源(美股，A股，港股)',
-                                 EMarketSourceType.E_MARKET_SOURCE_nt.value: u'网易数据源(美股，A股，港股)',
-                                 EMarketSourceType.E_MARKET_SOURCE_sn_us.value: u'新浪美股(美股)',
-                                 EMarketSourceType.E_MARKET_SOURCE_sn_futures.value: u'新浪国内期货(国内期货)',
-                                 EMarketSourceType.E_MARKET_SOURCE_sn_futures_gb.value: u'新浪国际期货(国际期货)',
-                                 EMarketSourceType.E_MARKET_SOURCE_hb_tc.value: u'比特币，莱特币'}
+        self.date_source_dict = {EMarketSourceType.E_MARKET_SOURCE_finmind_tw.value: '台股'}
         self.date_source = widgets.RadioButtons(
-            options=[u'百度数据源(美股，A股，港股)', u'腾讯数据源(美股，A股，港股)', u'网易数据源(美股，A股，港股)',
-                     u'新浪美股(美股)', u'新浪国内期货(国内期货)', u'新浪国际期货(国际期货)',
-                     u'比特币，莱特币'],
+            options=[u'台股'],
             value=self.date_source_dict[ABuEnv.g_market_source.value],
             description=u'数据源:',
             disabled=False
